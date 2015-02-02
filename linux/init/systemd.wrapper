@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# locktones     This shell script takes care of starting and stopping
+#               the locktones daemon, which 
+#               
+#
+# chkconfig: 12345 20 80
+# description: Inform the user, via the PC speaker, about the states \
+#              of the various keyboard locks and modes.
+# author: Dave Mielke <dave@mielke.cc>
+
+# Customizable constants.
+installationPrefix=""
+commandDirectory="/sbin"
+commandName="locktones"
+configurationDirectory="/etc/sysconfig"
+configurationName="${commandName}"
+configurationExtension=""
+
+# Derived constants.
+commandPath="${installationPrefix}${commandDirectory}/${commandName}"
+configurationPath="${installationPrefix}${configurationDirectory}/${configurationName}"
+[ -z "${configurationExtension}" ] || configurationPath="${configurationPath}.${configurationExtension}"
+
+[ ! -r "${configurationPath}" ] || . "${configurationPath}"
+[ -n "${NICE}" ] || NICE=0
+[ -z "${POLL}" ] || options="${options} --poll=${POLL}"
+[ -z "${DURATION}" ] || options="${options} --duration=${DURATION}"
+[ -z "${CAPS}" ] || options="${options} --caps=${CAPS}"
+[ -z "${NUM}" ] || options="${options} --num=${NUM}"
+[ -z "${SCROLL}" ] || options="${options} --scroll=${SCROLL}"
+
+exec nice -n "${NICE}" "${commandPath}" --foreground --active ${options}
+exit "${?}"

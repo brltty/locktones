@@ -1,0 +1,25 @@
+[Unit]
+
+Description=Audio Keyboard Lock State Indicators
+
+DefaultDependencies=yes
+
+
+[Service]
+
+Type=simple
+ExecStart=/usr/lib/systemd/locktones
+
+TimeoutStartSec=10
+TimeoutStopSec=10
+
+Restart=always
+RestartSec=30
+
+OOMScoreAdjust=-900
+
+
+[Install]
+WantedBy=basic.target
+
+

@@ -1,0 +1,16 @@
+# Configure the locktones daemon.
+#
+# If a setting is left blank, then its default value is used. Issue the
+# command "locktones --help" for an up-to-date list of default settings.
+
+# The default nice value is 0 (no process priority adjustment).
+NICE=                 # The nice process priority adjustment.
+
+# A time operand is an integer from 1 through 10 (tenths of a second).
+POLL=                 # The lock state poll interval.
+DURATION=             # The duration of each tone.
+
+# A pitch operand is an integer from 30 through 10000 (Herz).
+CAPS=                 # The pitch of the caps lock tone.
+NUM=                  # The pitch of the num lock tone.
+SCROLL=               # The pitch of the scroll lock tone.

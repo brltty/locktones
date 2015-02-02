@@ -1,0 +1,60 @@
+locktones:
+
+This software package was developed by Dave Mielke (dave@mielke.cc).
+Please send me any suggestions which you have for its improvement, no
+matter how small or trivial, as my goal is for this to be a quality
+package, and, as there's no way that I'll be able to have it truly attain
+that status on my own, your help would be greatly appreciated.
+
+The intent of this package is to provide blind computer users with an easy
+way to passively determine the current states of the various keyboard
+locks (caps, insert, num, scroll). It runs as a background process which
+periodically checks the locks, and uses the PC speaker to generate
+sequences of tones which indicate either a change in their states (see the
+--toggle option) or their current states (see the --active option).
+
+This software has been implemented for the following platforms:
+
+    Platform     Directory   Executable
+    Linux        linux       locktones
+    DOS(DJGPP)   djgpp       locktone.exe
+
+Each platform-specific directory contains a ready-to-use executable file
+(see the preceding table), a "Makefile" in case you wish to modify and/or
+rebuild the software, and a "README" file which describes the various
+idiosyncrasies of that particular platform. As time permits, support for
+other platforms will be added. All hints regarding how best to support
+other platforms shall be gladly accepted.
+
+Use the --help (or -h) option to view a summary of the command syntax.
+Trust it, rather than the documentation within this file, as being more
+up-to-date if there's a difference. If you notice any such difference,
+then please let me know about it.
+
+Use the --version (or -v) option to determine which version of the
+software you have.
+
+Use the --toggle (or -t) option if you wish to be notified only when the
+state of any lock changes. An ascending sequence of tones is played
+whenever a lock is activated, and a descending sequence of tones is played
+whenever a lock is deactivated.
+
+Use the --active (or -a) option if you wish to always be immediately aware
+of the current states of the locks. A persistent tone is played for each
+active lock. If more than one lock is active at the same time, then the
+applicable tones are played cyclically, rather than as a single chord,
+because the hardware on some computers does not permit the generation of a
+chord, and because, in my opinion, it's much easier to know with certainty
+which tones are being played.
+
+Use the --poll (or -p) option to specify (in tenths of seconds) how often
+to check the states of the locks. The default is 1.
+
+Use the --duration (or -d) option to specify (in tenths of seconds) the
+duration of each tone when multiple tones are being cyclically generated.
+The default is 2.
+
+Use the --caps (or -c), --insert (or -i), --num (or -n), and --scroll (or
+-s) options to explicitly specify the pitches (as a frequency in Herz) of
+the tones for each lock. The defaults are 300 for the caps lock, 450 for
+the insert lock, 600 for the num lock, and 1200 for the scroll lock.

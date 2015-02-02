@@ -1,0 +1,11 @@
+locktones executes in the foreground until all potential error conditions
+have been tested. Once it determines that everything is okay, it becomes a
+background process.
+
+Locktones must be run as root so that it can gain access to the following
+system resources:
+
+    open /dev/tty0
+
+The --insert (or -i) option has no effect, as the Linux kernel does not
+maintain a keyboard insert mode.

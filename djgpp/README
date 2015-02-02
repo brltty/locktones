@@ -1,0 +1,23 @@
+locktones executes as a normal command until all potential error
+conditions have been tested. Once it determines that everything is okay,
+it becomes a TSR (Terminate and Stay Resident).
+
+The long options, i.e. those which start with two minus signs (--word),
+are not recognized because DJGPP does not provide an implementation of
+"getopt_long".
+
+DJGPP is a 32-bit system which requires DPMI support. If you get a message
+like the following, then you need to install a DPMI driver.
+
+    Load error: no DPMI - Get csdpmi*b.zip
+
+If you're using a native DOS system, then either add the directory
+"djgpp\dpmi" (from this package) to your command search path, or copy the
+file "djgpp\dpmi\cwsdpmi.exe" (from this package) to a directory which is
+in your command search path. The files within the "djgpp\dpmi" directory
+are an unmodified copy of those within the DJGPP package "csdpmi4b".
+
+If you're using DOSEMU on Linux, then add a line like the following to
+"/etc/dosemu.conf" (syntax is for DOSEMU 0.98 or later):
+
+    $_dpmi = (16384) # Number of KiloBytes of DPMI memory.

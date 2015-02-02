@@ -1,0 +1,70 @@
+#!/bin/sh
+#
+# locktones     This shell script takes care of starting and stopping
+#               the locktones daemon, which 
+#               
+#
+# chkconfig: 12345 20 80
+# description: Inform the user, via the PC speaker, about the states \
+#              of the various keyboard locks and modes.
+# author: Dave Mielke <dave@mielke.cc>
+
+# Customizable constants.
+installationPrefix="/usr/local"
+commandDirectory="/sbin"
+commandName="locktones"
+configurationDirectory="/etc"
+configurationName="${commandName}"
+configurationExtension="conf"
+
+# Derived constants.
+commandPath="${installationPrefix}${commandDirectory}/${commandName}"
+configurationPath="${installationPrefix}${configurationDirectory}/${configurationName}"
+[ -z "${configurationExtension}" ] || configurationPath="${configurationPath}.${configurationExtension}"
+
+# See how we were called.
+case "${1}"
+in
+   start)
+      [ ! -r "${configurationPath}" ] || . "${configurationPath}"
+      [ -n "${NICE}" ] || NICE=0
+      [ -z "${POLL}" ] || options="${options} --poll=${POLL}"
+      [ -z "${DURATION}" ] || options="${options} --duration=${DURATION}"
+      [ -z "${CAPS}" ] || options="${options} --caps=${CAPS}"
+      [ -z "${NUM}" ] || options="${options} --num=${NUM}"
+      [ -z "${SCROLL}" ] || options="${options} --scroll=${SCROLL}"
+
+      nice -n "${NICE}" "${commandPath}" --active ${options}
+      ;;
+
+   stop)
+      echo -n "Shutting down ${commandName}..."
+      if killall "${commandName}"
+      then
+         echo done
+      else
+         echo failed
+      fi
+      ;;
+
+   restart)
+      "${0}" stop
+      "${0}" start
+      ;;
+
+   status)
+      pid="`pidof "${commandName}"`"
+      if [ -n "${pid}" ]
+      then
+         echo "${commandName} (pid ${pid}) is running."
+      else
+         echo "${commandName} is not running."
+      fi
+      ;;
+
+   *)
+      echo "Usage: ${commandName} {start|stop|restart|status}"
+      exit 1
+esac
+
+exit 0

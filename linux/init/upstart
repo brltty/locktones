@@ -1,0 +1,35 @@
+# This upstart job starts the locktones process, which informs the user, via
+# the PC speaker, about the states of the various keyboard locks and modes.
+#
+# author: Dave Mielke <dave@mielke.cc>
+
+start on startup
+console none
+respawn
+
+script
+
+# Customizable constants.
+installationPrefix="/usr/local"
+commandDirectory="/sbin"
+commandName="locktones"
+configurationDirectory="/etc"
+configurationExtension="conf"
+
+# Derived constants.
+commandPath="${installationPrefix}${commandDirectory}/${commandName}"
+configurationPath="${installationPrefix}${configurationDirectory}/${commandName}"
+[ -z "${configurationExtension}" ] || configurationPath="${configurationPath}.${configurationExtension}"
+
+# Load and interpret the configuration file.
+[ ! -r "${configurationPath}" ] || . "${configurationPath}"
+[ -n "${NICE}" ] || NICE=0
+options="--foreground --active"
+[ -z "${POLL}" ] || options="${options} --poll=${POLL}"
+[ -z "${DURATION}" ] || options="${options} --duration=${DURATION}"
+[ -z "${CAPS}" ] || options="${options} --caps=${CAPS}"
+[ -z "${NUM}" ] || options="${options} --num=${NUM}"
+[ -z "${SCROLL}" ] || options="${options} --scroll=${SCROLL}"
+
+nice -n "${NICE}" "${commandPath}" ${options}
+end script
