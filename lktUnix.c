@@ -5,7 +5,8 @@
 #include "lktUnix.h"
 
 /* Install a signal handler. */
-static void install_handler (int signal, void (*handler)(int signal)) {
+static void
+install_handler (int signal, void (*handler)(int signal)) {
    struct sigaction sa;
    clear_variable(sa);
    sa.sa_handler = handler;
@@ -13,12 +14,14 @@ static void install_handler (int signal, void (*handler)(int signal)) {
 }
 
 /* Handle the alarm signal. */
-static void alarm_handler (int signal) {
+static void
+alarm_handler (int signal) {
    select_tone();
 }
 
 /* Place the program into the background. */
-static void become_daemon () {
+static void
+become_daemon (void) {
    fflush(stdout);
    fflush(stderr);
    {
@@ -41,13 +44,15 @@ static void become_daemon () {
 /* Fill in the fields of a "timeval" data structure.
  * Assume that all slack bits have previously been cleared.
  */
-static void set_timeval (struct timeval *tv, int micro_seconds) {
+static void
+set_timeval (struct timeval *tv, int micro_seconds) {
    tv->tv_sec = micro_seconds / 1000000;
    tv->tv_usec = micro_seconds % 1000000;
 }
 
 /* Delay program execution for the specified period of time. */
-static void delay_execution (int micro_seconds) {
+static void
+delay_execution (int micro_seconds) {
    struct timeval tv;
    clear_variable(tv);
    set_timeval(&tv, micro_seconds);
@@ -55,7 +60,8 @@ static void delay_execution (int micro_seconds) {
 }
 
 /* Monitor the locks in the background. */
-void monitor_locks (int foreground_task, int poll_interval) {
+void
+monitor_locks (int foreground_task, int poll_interval) {
    get_resources();
    install_handler(SIGALRM, alarm_handler);
    if (!foreground_task) become_daemon();
@@ -68,7 +74,8 @@ void monitor_locks (int foreground_task, int poll_interval) {
 }
 
 /* Schedule an alarm signal. */
-static void set_alarm (int interval) {
+static void
+set_alarm (int interval) {
    struct itimerval itv;
    clear_variable(itv);
    set_timeval(&itv.it_value, interval);
@@ -76,14 +83,16 @@ static void set_alarm (int interval) {
 }
 
 /* Cancel any pending alarm signal. */
-static void cancel_alarm () {
+static void
+cancel_alarm (void) {
    struct itimerval itv;
    clear_variable(itv);
    setitimer(ITIMER_REAL, &itv, NULL);
 }
 
 /* Start the specified tone. */
-void start_tone (int pitch, int duration) {
+void
+start_tone (int pitch, int duration) {
    if (tone_on(pitch)) {
       /* The tone has been started. */
       set_alarm(duration);
@@ -91,7 +100,8 @@ void start_tone (int pitch, int duration) {
 }
 
 /* Stop the current tone. */
-void stop_tone () {
+void
+stop_tone (void) {
    cancel_alarm();
    tone_off();
 }

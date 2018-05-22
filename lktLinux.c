@@ -44,20 +44,25 @@ int
 get_flags (void) {
    int flags = 0;
    int leds = 0;
+
    if (ioctl(console_descriptor, KDGETLED, &leds) != -1) {
       /* The query of the lock states was successful. */
+
       if (leds & LED_CAP) {
 	 /* The caps lock is active. */
          flags |= caps_flag;
       }
+
       if (leds & LED_NUM) {
 	 /* The num lock is active. */
          flags |= num_flag;
       }
+
       if (leds & LED_SCR) {
 	 /* The scroll lock is active. */
          flags |= scroll_flag;
       }
    }
+
    return flags;
 }
