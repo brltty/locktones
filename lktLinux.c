@@ -4,13 +4,17 @@
 /* Unix-specific procedure and type definitions. */
 #include "lktUnix.h"
 
+/* Generic I/O controls. */
+#include <sys/ioctl.h>
+
 /* Linux-specific includes. */
 #include <linux/kd.h>
 
 static int console_descriptor = -1; // A handle to the console I/O subsystem.
 
 /* Get a handle to the console I/O subsystem. */
-static void open_console () {
+static void
+open_console (void) {
    if ((console_descriptor = open("/dev/tty0", O_WRONLY)) == -1) {
       /* The console device could not be opened. */
       system_error("console open");
@@ -18,22 +22,26 @@ static void open_console () {
 }
 
 /* Get all of the needed system resources. */
-void get_resources () {
+void
+get_resources (void) {
    open_console();
 }
 
 /* Start an asynchronous, endless tone. */
-int tone_on (pitch) {
+int
+tone_on (int pitch) {
    return ioctl(console_descriptor, KIOCSOUND, (1190000 / pitch)) != -1;
 }
 
 /* Stop the current tone. */
-void tone_off () {
+void
+tone_off (void) {
    ioctl(console_descriptor, KIOCSOUND, 0);
 }
 
 /* Return the current lock states. */
-int get_flags () {
+int
+get_flags (void) {
    int flags = 0;
    int leds = 0;
    if (ioctl(console_descriptor, KDGETLED, &leds) != -1) {

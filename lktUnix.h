@@ -4,7 +4,7 @@
 #include <signal.h>
 
 /* Flavour-specific procedures. */
-extern void get_resources ();
+extern void get_resources (void);
 extern int tone_on (int pitch);
-extern void tone_off ();
-extern int get_flags ();
+extern void tone_off (void);
+extern int get_flags (void);
