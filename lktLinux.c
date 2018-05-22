@@ -43,9 +43,9 @@ tone_off (void) {
 int
 get_flags (void) {
    int flags = 0;
-   int leds = 0;
+   unsigned char leds = 0;
 
-   if (ioctl(console_descriptor, KDGETLED, &leds) != -1) {
+   if (ioctl(console_descriptor, KDGKBLED, &leds) != -1) {
       /* The query of the lock states was successful. */
 
       if (leds & LED_CAP) {
