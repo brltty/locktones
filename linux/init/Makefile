@@ -1,17 +1,26 @@
-MAIN_EXECUTABLE = /sbin/locktones
-CONFIGURATION_FILE = /etc/sysconfig/locktones
-WRAPPER_SCRIPT = /usr/libexec/locktones-wrapper
-SERVICE_UNIT = /etc/systemd/system/locktones.service
+PROGRAM_NAME = locktones
+PROGRAM_EXECUTABLE = /sbin/$(PROGRAM_NAME)
 
-systemd-install:
-	install -m 755 ../locktones $(MAIN_EXECUTABLE)
-	install -m 644 config $(CONFIGURATION_FILE)
-	install -m 755 systemd.wrapper $(WRAPPER_SCRIPT)
-	install -m 644 systemd.service $(SERVICE_UNIT)
+install-executable:
+	install -m 755 ../$(PROGRAM_NAME) $(PROGRAM_EXECUTABLE)
 
-systemd-uninstall:
-	rm -f $(MAIN_EXECUTABLE)
-	rm -f $(CONFIGURATION_FILE)
-	rm -f $(WRAPPER_SCRIPT)
-	rm -f $(SERVICE_UNIT)
+uninstall-executable:
+	rm -f $(PROGRAM_EXECUTABLE)
+
+SYSTEMD_CONFIG = /etc/sysconfig/$(PROGRAM_NAME)
+SYSTEMD_WRAPPER = /usr/libexec/$(PROGRAM_NAME)-wrapper
+SYSTEMD_UNIT = /etc/systemd/system/$(PROGRAM_NAME).service
+
+install-systemd: install-executable
+	install -m 644 config $(SYSTEMD_CONFIG)
+	install -m 755 systemd.wrapper $(SYSTEMD_WRAPPER)
+	install -m 644 systemd.service $(SYSTEMD_UNIT)
+
+uninstall-systemd: uninstall-executable
+	rm -f $(SYSTEMD_CONFIG)
+	rm -f $(SYSTEMD_WRAPPER)
+	rm -f $(SYSTEMD_UNIT)
+
+reload-systemd:
+	systemctl daemon-reload
 
