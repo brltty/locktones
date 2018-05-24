@@ -44,20 +44,26 @@ tone_off (void) {
 /* Return the current lock states. */
 int
 get_flags (void) {
-   int flags = 0;
-   unsigned char leds = 0;
+   if (console_descriptor < 0) return 0;
    struct vt_stat state;
 
-   if (console_descriptor < 0)
-      return 0;
+   if (ioctl(console_descriptor, VT_GETSTATE, &state) != -1) {
+      if (state.v_active != console_number) {
+         /* Reopen the console to get to the foreground console */
 
-   if (ioctl(console_descriptor, VT_GETSTATE, &state) != -1 &&
-       state.v_active != console_number) {
-      /* Reopen the console to get to the foreground console */
-      close(console_descriptor);
-      open_console();
-      console_number = state.v_active;
+         if (console_number != -1) {
+            /* There's no need to reopen the console the first time. */
+            close(console_descriptor);
+            open_console();
+         }
+
+         console_number = state.v_active;
+         if (show_changes) printf("console %d\n", console_number);
+      }
    }
+
+   int flags = 0;
+   unsigned char leds = 0;
 
    if (ioctl(console_descriptor, KDGKBLED, &leds) != -1) {
       /* The query of the lock states was successful. */

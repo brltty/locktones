@@ -31,8 +31,10 @@ Trust it, rather than the documentation within this file, as being more
 up-to-date if there's a difference. If you notice any such difference,
 then please let me know about it.
 
-Use the --version (or -v) option to determine which version of the
+Use the --version (or -V) option to determine which version of the
 software you have.
+
+Use the --verbose (or -v) option to view lock state changes as they occur.
 
 Use the --toggle (or -t) option if you wish to be notified only when the
 state of any lock changes. An ascending sequence of tones is played

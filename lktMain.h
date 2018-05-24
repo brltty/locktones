@@ -37,3 +37,4 @@ extern void get_parameters (int *argcp, char ***argvp);
 extern const char *program_path; // The full path to the executing binary.
 extern const char *program_name; // The name (last path component) of the executing binary.
 extern const char *program_version; // The version of the executing program.
+extern int show_changes;

@@ -5,7 +5,7 @@
 #include "lktGopt.h"
 
 /* The single-character option table. */
-const char *character_options = "+ac:d:fhi:n:p:s:tv";
+const char *character_options = "+ac:d:fhi:n:p:s:tvV";
 
 /* Get the operand for the current program invocation option. */
 const char *get_operand () {

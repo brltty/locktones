@@ -2,7 +2,7 @@
 #include "lktMain.h"
 
 /* Program version specification. */
-const char *program_version = "0.5";
+const char *program_version = "0.6";
 
 const char *program_path = "locktones"; // The full path to the executing binary.
 const char *program_name = NULL; // The name (last path component) of the executing binary.
@@ -38,6 +38,7 @@ DEFINE_TONE(num); // The default num lock tone.
 DEFINE_TONE(scroll); // The default scroll lock tone.
 
 static int foreground_task = 0;
+int show_changes = 0;
 static int play_mode = play_default; // The way in which the tones are to be played.
 static int poll_interval = poll_default * interval_multiplier; // Micro-seconds between each poll of the lock states.
 static int initial_duration = 0; // The duration of the initial tones of a sequence (in micro-seconds).
@@ -143,8 +144,40 @@ void select_tone () {
    }
 }
 
+typedef struct {
+   const char *name;
+   unsigned char bit;
+} flag_entry;
+
+static const flag_entry flag_table[] = {
+   { "caps"  , caps_flag  },
+   { "num"   , num_flag   },
+   { "scroll", scroll_flag},
+   { "insert", insert_flag},
+   { NULL }
+};
+
 /* Analyze the latest states of the locks and take appropriate action. */
 void check_flags (int flags) {
+   if (show_changes) {
+      const flag_entry *flag = flag_table;
+
+      while (flag->name) {
+         const char *state = NULL;
+
+         if ((flags & flag->bit) && !(lock_flags & flag->bit)) {
+            state = "on";
+         } else if (!(flags & flag->bit) && (lock_flags & flag->bit)) {
+            state = "off";
+         }
+
+         if (state) printf("%s %s\n", flag->name, state);
+         flag += 1;
+      }
+
+      fflush(stdout);
+   }
+
    play_table[play_mode].check(flags);
 }
 
@@ -213,7 +246,8 @@ static void display_usage () {
       "",
       "{-f | --foreground}     Don't become a daemon.",
       "{-h | --help}           Write usage information to standard output and exit.",
-      "{-v | --version}        Write version information to standard output and exit.",
+      "{-v | --verbose}        Write state changes to standard output.",
+      "{-V | --version}        Write version information to standard output and exit.",
       "",
       NULL
    };
@@ -304,6 +338,7 @@ static void process_options (int argc, char **argv) {
    int current_option;
    int exit_immediately = FALSE;
    int help_specified = FALSE;
+   int verbose_specified = FALSE;
    int version_specified = FALSE;
    while ((current_option = get_option(argc, argv)) != EOF) {
       switch (current_option) {
@@ -342,7 +377,10 @@ static void process_options (int argc, char **argv) {
          case 't': // --toggle: Play activation/deactivation tunes when lock state changes.
 	    play_mode = play_toggle;
 	    break;
-         case 'v': // --version: Write version information to standard output, and then exit.
+         case 'v': // --verbose: Write lock state changes to standard output.
+	    show_changes = TRUE;
+	    break;
+         case 'V': // --version: Write version information to standard output, and then exit.
 	    version_specified = TRUE;
 	    break;
       }

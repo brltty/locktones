@@ -22,7 +22,8 @@ const struct option word_options[] = {
    {"poll"      , required_argument, NULL, 'p'},
    {"scroll"    , required_argument, NULL, 's'},
    {"toggle"    , no_argument      , NULL, 't'},
-   {"version"   , no_argument      , NULL, 'v'},
+   {"verbose"   , no_argument      , NULL, 'v'},
+   {"version"   , no_argument      , NULL, 'V'},
    {NULL        , 0                , NULL, 0  }
 };
 
