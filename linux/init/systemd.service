@@ -8,7 +8,7 @@ DefaultDependencies=yes
 [Service]
 
 Type=simple
-ExecStart=/usr/lib/systemd/locktones
+ExecStart=/usr/libexec/locktones-wrapper
 
 TimeoutStartSec=10
 TimeoutStopSec=10
