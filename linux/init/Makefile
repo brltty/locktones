@@ -10,7 +10,7 @@ install-executable:
 	$(INSTALL_PROGRAM) ../$(PROGRAM_NAME) $(PROGRAM_EXECUTABLE)
 
 uninstall-executable:
-	rm -f $(PROGRAM_EXECUTABLE)
+	-rm -f $(PROGRAM_EXECUTABLE)
 
 SYSTEMD_CONFIG = /etc/sysconfig/$(PROGRAM_NAME)
 SYSTEMD_WRAPPER = /usr/libexec/$(PROGRAM_NAME)-wrapper
@@ -22,9 +22,9 @@ install-systemd: install-executable
 	$(INSTALL_DATA) systemd.service $(SYSTEMD_UNIT)
 
 uninstall-systemd: uninstall-executable
-	rm -f $(SYSTEMD_CONFIG)
-	rm -f $(SYSTEMD_WRAPPER)
-	rm -f $(SYSTEMD_UNIT)
+	-rm -f $(SYSTEMD_CONFIG)
+	-rm -f $(SYSTEMD_WRAPPER)
+	-rm -f $(SYSTEMD_UNIT)
 
 reload-systemd:
 	systemctl daemon-reload
