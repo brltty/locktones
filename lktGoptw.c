@@ -7,9 +7,6 @@
 /* Support for long options. */
 #include <getopt.h>
 
-/* The single-character option table. */
-extern const char *character_options;
-
 /* The full-word option table. */
 const struct option word_options[] = {
    {"active"    , no_argument      , NULL, 'a'},
