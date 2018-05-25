@@ -58,7 +58,7 @@ get_flags (void) {
          }
 
          console_number = state.v_active;
-         if (show_changes) printf("console %d\n", console_number);
+         if (show_changes) printf("tty %d\n", console_number);
       }
    }
 
@@ -75,7 +75,7 @@ get_flags (void) {
 
       if (leds & LED_NUM) {
 	 /* The num lock is active. */
-         flags |= num_flag;
+         flags |= number_flag;
       }
 
       if (leds & LED_SCR) {

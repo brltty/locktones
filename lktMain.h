@@ -29,10 +29,10 @@ extern const char *get_operand (void);
 extern void get_parameters (int *argcp, char ***argvp);
 
 /* A platform-independent flag bit for each lock. */
-#define caps_flag 0X1
-#define insert_flag 0X2
-#define num_flag 0X4
-#define scroll_flag 0X8
+#define caps_flag   0X1
+#define number_flag 0X2
+#define scroll_flag 0X4
+#define insert_flag 0X8
 
 extern const char *program_path; // The full path to the executing binary.
 extern const char *program_name; // The name (last path component) of the executing binary.

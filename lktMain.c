@@ -15,9 +15,9 @@ enum {
 #define play_default play_toggle
 #define poll_default 1 // The default lock state poll interval.
 #define duration_default 2 // The default tone duration.
-#define caps_default 300 // The default caps lock tone pitch.
-#define insert_default 450 // The default insert mode tone pitch.
-#define num_default 600 // The default num lock tone pitch.
+#define caps_default    300 // The default caps lock tone pitch.
+#define insert_default  450 // The default insert mode tone pitch.
+#define number_default  600 // The default number lock tone pitch.
 #define scroll_default 1200 // The default scroll lock tone pitch.
 
 static const int minimum_interval = 1; // The minimum specifiable time interval.
@@ -34,7 +34,7 @@ struct tone_entry { // The definition of a tone.
 #define DEFINE_TONE(lock) static struct tone_entry lock##_tone = {lock##_default, NULL}
 DEFINE_TONE(caps); // The default caps lock tone.
 DEFINE_TONE(insert); // The default insert mode tone.
-DEFINE_TONE(num); // The default num lock tone.
+DEFINE_TONE(number); // The default number lock tone.
 DEFINE_TONE(scroll); // The default scroll lock tone.
 
 static int foreground_task = 0;
@@ -57,7 +57,7 @@ typedef struct { // The definition of an entry in the lock table.
 static lock_entry lock_table[] = { // The table of all of the supported locks.
    LOCK_ENTRY(caps),
    LOCK_ENTRY(insert),
-   LOCK_ENTRY(num),
+   LOCK_ENTRY(number),
    LOCK_ENTRY(scroll)
 };
 static const int lock_count = sizeof(lock_table) / sizeof(lock_entry); // The number of locks in the table.
@@ -151,7 +151,7 @@ typedef struct {
 
 static const flag_entry flag_table[] = {
    { "caps"  , caps_flag  },
-   { "num"   , num_flag   },
+   { "number", number_flag   },
    { "scroll", scroll_flag},
    { "insert", insert_flag},
    { NULL }
@@ -241,12 +241,12 @@ static void display_usage () {
       "",
       "{-c | --caps} pitch     The pitch of the caps lock tone.",
       "{-i | --insert} pitch   The pitch of the insert mode tone.",
-      "{-n | --num} pitch      The pitch of the num lock tone.",
+      "{-n | --number} pitch   The pitch of the number lock tone.",
       "{-s | --scroll} pitch   The pitch of the scroll lock tone.",
       "",
       "{-f | --foreground}     Don't become a daemon.",
       "{-h | --help}           Write usage information to standard output and exit.",
-      "{-v | --verbose}        Write state changes to standard output.",
+      "{-v | --verbose}        Write state changes to standard output (implies -f).",
       "{-V | --version}        Write version information to standard output and exit.",
       "",
       NULL
@@ -258,8 +258,8 @@ static void display_usage () {
    }
    printf("A \"time\" operand is an integer from %d through %d (tenths of a second).\n", minimum_interval, maximum_interval);
    printf("A \"pitch\" operand is an integer from %d through %d (Herz).\n", minimum_pitch, maximum_pitch);
-   printf("\nThe defaults are: --caps=%d --insert=%d --num=%d --scroll=%d\n",
-	  caps_default, insert_default, num_default, scroll_default);
+   printf("\nThe defaults are: --caps=%d --insert=%d --number=%d --scroll=%d\n",
+	  caps_default, insert_default, number_default, scroll_default);
    printf("                  --%s --poll=%d --duration=%d\n",
 	  play_table[play_default].option, poll_default, duration_default);
 }
@@ -356,6 +356,9 @@ static void process_options (int argc, char **argv) {
          case 'd': // --duration: Specify the duration of the last tone of a sequence.
 	    final_duration = interval_operand("tone duration");
 	    break;
+         case 'v': // --verbose: Write lock state changes to standard output.
+	    show_changes = TRUE;
+            /* fall through */
          case 'f': // foreground: Don't become a daemon.
             foreground_task = 1;
             break;
@@ -365,8 +368,8 @@ static void process_options (int argc, char **argv) {
          case 'i': // --insert: Specify the pitch of the insert mode tone.
 	    insert_tone.pitch = pitch_operand("insert mode pitch");
 	    break;
-         case 'n': // --num: Specify the pitch of the num lock tone.
-	    num_tone.pitch = pitch_operand("num lock pitch");
+         case 'n': // --number: Specify the pitch of the number lock tone.
+	    number_tone.pitch = pitch_operand("number lock pitch");
 	    break;
          case 'p': // --poll: Specify the interval at which the lock states are checked.
 	    poll_interval = interval_operand("lock state poll interval");
@@ -376,9 +379,6 @@ static void process_options (int argc, char **argv) {
 	    break;
          case 't': // --toggle: Play activation/deactivation tunes when lock state changes.
 	    play_mode = play_toggle;
-	    break;
-         case 'v': // --verbose: Write lock state changes to standard output.
-	    show_changes = TRUE;
 	    break;
          case 'V': // --version: Write version information to standard output, and then exit.
 	    version_specified = TRUE;

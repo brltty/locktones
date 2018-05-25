@@ -24,7 +24,7 @@ static int get_flags () {
    }
    if (status & 0X20) {
       /* The num lock is active. */
-      flags |= num_flag;
+      flags |= number_flag;
    }
    if (status & 0X40) {
       /* The caps lock is active. */

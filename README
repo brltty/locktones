@@ -35,6 +35,7 @@ Use the --version (or -V) option to determine which version of the
 software you have.
 
 Use the --verbose (or -v) option to view lock state changes as they occur.
+It implies the --foreground (-f) option.
 
 Use the --toggle (or -t) option if you wish to be notified only when the
 state of any lock changes. An ascending sequence of tones is played
@@ -59,4 +60,4 @@ The default is 2.
 Use the --caps (or -c), --insert (or -i), --num (or -n), and --scroll (or
 -s) options to explicitly specify the pitches (as a frequency in Herz) of
 the tones for each lock. The defaults are 300 for the caps lock, 450 for
-the insert lock, 600 for the num lock, and 1200 for the scroll lock.
+the insert lock, 600 for the number lock, and 1200 for the scroll lock.
